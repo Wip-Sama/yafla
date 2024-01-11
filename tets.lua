@@ -1,0 +1,5 @@
+local ciao = {dsi = 32, "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"}
+for k, v in pairs(ciao) do
+    print(k, v)
+end
+print(ciao[1])
