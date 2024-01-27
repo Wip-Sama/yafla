@@ -107,7 +107,7 @@ function Hotbar(parent, pinnable, close_button, extra_button, icon, title)
                 style = "yafla_hotbar_sprite"
             } or nil,
             title and LABEL {
-                caption = { title },
+                caption = title,
                 ignored_by_interaction = true,
                 style = "frame_title"
             } or nil,

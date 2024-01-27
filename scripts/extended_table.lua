@@ -1,19 +1,19 @@
 local extended_table = {}
 
-function extended_table.is_empty(table)
-    if #table > 0 then
+function extended_table.is_empty(tbl)
+    if #tbl > 0 then
         return false
     end
 
-    for _, _ in pairs(table) do
+    for _, _ in pairs(tbl) do
         return false
     end
 
     return true
 end
 
-function extended_table.is_present(table, element)
-    for _, v in pairs(table) do
+function extended_table.is_present(tbl, element)
+    for _, v in pairs(tbl) do
         if v == element then
             return true
         end
@@ -21,11 +21,11 @@ function extended_table.is_present(table, element)
     return false
 end
 
-function extended_table.slice(table, first, last, step)
+function extended_table.slice(tbl, first, last, step)
     local sliced = {}
 
-    for i = first or 1, last or #table, step or 1 do
-        sliced[#sliced+1] = table[i]
+    for i = first or 1, last or #tbl, step or 1 do
+        sliced[#sliced+1] = tbl[i]
     end
 
     return sliced
