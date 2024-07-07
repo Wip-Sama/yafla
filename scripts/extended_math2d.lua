@@ -100,7 +100,8 @@ function math2d.direction.to_vector(dir, range)
     return math2d.direction["vectors" .. tostring(range)][(dir % (8 * range)) + 1]
 end
 
-function math2d.direction.vector_to_vec1_position(position, range)
+-- vec1 is a number from 1 to 8 (it means vector of range 1)
+function math2d.direction.downscale_to_vec1(position, range)
     local check = range * 4
     local pos = math2d.direction.from_vector(position, range)
     local mod = pos / check
@@ -124,23 +125,24 @@ function math2d.direction.vector_to_vec1_position(position, range)
     end
 end
 
+-- vec1 is a number from 1 to 8 (it means vector of range 1)
 function math2d.direction.upscale_vec1(vec1_pos, range)
     return (vec1_pos - 1) * range
 end
 
-function math2d.position.round_up(vec)
+function math2d.ceil(vec)
     vec = math2d.position.ensure_xy(vec)
     local out = { x = vec.x, y = vec.y }
-    if out.x < 0 then
-        out.x = math.ceil(out.x)
-    else
-        out.x = math.ceil(out.x)
-    end
-    if out.y < 0 then
-        out.y = math.ceil(out.y)
-    else
-        out.y = math.ceil(out.y)
-    end
+    out.x = math.ceil(out.x)
+    out.y = math.ceil(out.y)
+    return out
+end
+
+function math2d.floor(vec)
+    vec = math2d.position.ensure_xy(vec)
+    local out = { x = vec.x, y = vec.y }
+    out.x = math.floor(out.x)
+    out.y = math.floor(out.y)
     return out
 end
 

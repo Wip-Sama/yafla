@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.0.2
+Date: 2024-03-26
+  Changes:
+    - extnded_math2d
+    - extended_table
+---------------------------------------------------------------------------------------------------
 Version: 0.0.1
 Date: 2024-01-15
   Added:
@@ -7,7 +13,7 @@ Date: 2024-01-15
     - extended_table: set of functions to work with lua tables, check:
     - some sprites
   Experimental:
-    - gui_builder & gui_components: set of functions to build ui, DON'T USE IT STUFF WILL CHANGE!
+    - gui_builder & gui_components: a set of functions to build ui, DON'T USE IT STUFF WILL CHANGE!
   Notes:
     - I'm working on a wiki to explain how to use the library, but it's not ready yet, if you have any requests or want to help please contact me on Discord/Telegram.
 ---------------------------------------------------------------------------------------------------

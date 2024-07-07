@@ -1,5 +1,9 @@
 local extended_table = {}
 
+function extended_table.deepcopy()
+    
+end
+
 function extended_table.is_empty(tbl)
     if #tbl > 0 then
         return false
