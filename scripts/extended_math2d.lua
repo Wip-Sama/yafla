@@ -13,10 +13,17 @@ function math2d.position.dot_product(p1, p2)
 end
 
 function math2d.position.abs(pos)
+    if not pos then
+        pos = { x = 0, y = 0 }
+    end
     pos = math2d.position.ensure_xy(pos)
     return { x = math.abs(pos.x), y = math.abs(pos.y) }
 end
 
+
+---@param pos Position | table
+---@return Position -- int
+---@return Position -- frac
 function math2d.position.split(pos)
     pos = math2d.position.ensure_xy(pos)
 
@@ -39,6 +46,14 @@ end
 function math2d.position.tilepos(pos)
     pos = math2d.position.ensure_xy(pos)
     return { x = math.floor(pos.x), y = math.floor(pos.y) }
+end
+
+function math2d.position.adds(args)
+    local p1 = {x = 0, y = 0}
+    for _, value in pairs(args) do
+        p1 = math2d.position.add(p1, value)
+    end
+    return p1
 end
 
 math2d.direction = {}

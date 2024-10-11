@@ -1,0 +1,16 @@
+{
+    "factorio.versions": [
+        {
+            "name": "Factorio",
+            "factorioPath": "d:\\Programmi\\Factorio\\bin\\x64\\factorio.exe",
+            "active": true
+        }
+    ],
+    "Lua.workspace.library": [
+        "d:\\Programmi\\Factorio\\data"
+    ],
+    "Lua.workspace.userThirdParty": [
+        "c:\\Users\\sgroo\\AppData\\Roaming\\Code\\User\\workspaceStorage\\c150d30e39b7e2957685b3c1bef0eb4a\\justarandomgeek.factoriomod-debug\\sumneko-3rd"
+    ],
+    "Lua.workspace.checkThirdParty": "ApplyInMemory"
+}

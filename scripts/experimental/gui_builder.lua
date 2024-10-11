@@ -1,5 +1,6 @@
 local extended_table = require("__yafla__.scripts.extended_table")
 local gui_builder = {}
+local util = require("util")
 
 function deepcopy(object)
     local lookup_table = {}
@@ -61,9 +62,16 @@ end
 
 local actions_conversions = {
     on_click = defines.events.on_gui_click,
+    on_gui_click = defines.events.on_gui_click,
+
     on_selection_changed = defines.events.on_gui_selection_state_changed,
+    on_gui_selection_state_changed = defines.events.on_gui_selection_state_changed,
+
     on_elem_changed = defines.events.on_gui_elem_changed,
+    on_gui_elem_changed = defines.events.on_gui_elem_changed,
+
     on_text_changed = defines.events.on_gui_text_changed,
+    on_gui_text_changed = defines.events.on_gui_text_changed,
 }
 
 local function add_actions(element, actions)
@@ -73,10 +81,13 @@ local function add_actions(element, actions)
         error("Element with index " .. element.index .. " already has handlers")
     end
 
-    for k, v in pairs(actions) do
-        global.handlers[element.index][actions_conversions[k]] = global.handlers[element.index][actions_conversions[k]] or
-            {}
-        table.insert(global.handlers[element.index], actions_conversions[k], v)
+    if type(actions) ~= "table" then
+        error("Actions must be a table")
+    else
+        for k, v in pairs(actions) do
+            global.handlers[element.index][actions_conversions[k]] = global.handlers[element.index][actions_conversions[k]] or {}
+            table.insert(global.handlers[element.index], actions_conversions[k], v)
+        end
     end
 end
 
@@ -272,6 +283,12 @@ function FRAME(self, direction, ref, drag_target)
 end
 
 ---https://lua-api.factorio.com/latest/classes/LuaGuiElement.html#flow
+---@param elements table | nil
+---@param base_parameters table | nil
+---@param style_parameters table | nil
+---@param direction GuiDirection | nil
+---@param drag_target boolean | nil
+---@return table
 function FLOW(self, elements, base_parameters, style_parameters, direction, drag_target)
     local element = { type = "flow", advanced_properties = {}, actions = {} }
 
@@ -322,6 +339,8 @@ function TABLE(self, items, base_parameters, style_parameters)
     element["draw_horizontal_lines"] = self.draw_horizontal_lines
     element["draw_horizontal_line_after_headers"] = self.draw_horizontal_line_after_headers
     element["vertical_centering"] = self.vertical_centering
+
+    element["items"] = self.items
 
     element["elements"] = {}
     for i = 1, #self do
@@ -434,7 +453,7 @@ function RADIOBUTTON(self, base_parameters, style_parameters, state, on_click)
 end
 
 ---https://lua-api.factorio.com/latest/classes/LuaGuiElement.html#sprite
-function SPRITE(self, sprite, resize_to_sprite)
+function SPRITE(self, sprite, resize_to_sprite, scale, shift)
     local element = { type = "sprite", advanced_properties = {}, actions = {} }
 
     inplement_parameters(element, self)
@@ -605,6 +624,54 @@ function CHECKBOX(self, items, selected_index)
     return element
 end
 
+---https://lua-api.factorio.com/latest/classes/LuaGuiElement.html#minimap
+function MINIMAP(self, position, surface_index, chart_player_index, force, zoom)
+    local element = { type = "minimap", advanced_properties = {}, actions = {} }
+
+    inplement_parameters(element, self)
+
+    element["state"] = self.state
+
+    element["position"] = self.position
+    element["surface_index"] = self.surface_index
+    element["chart_player_index"] = self.chart_player_index
+    element["force"] = self.force
+    element["zoom"] = self.zoom
+
+    element["elements"] = {}
+    for i = 1, #self do
+        table.insert(element["elements"], self[i])
+    end
+
+    if extended_table.is_empty(element.advanced_properties) then element.advanced_properties = nil end
+    if extended_table.is_empty(element.actions) then element.actions = nil end
+
+    return element
+end
+
+---https://lua-api.factorio.com/latest/classes/LuaGuiElement.html#minimap
+function CAMERA(self, position, surface_index, zoom)
+    local element = { type = "camera", advanced_properties = {}, actions = {} }
+
+    inplement_parameters(element, self)
+
+    element["state"] = self.state
+
+    element["position"] = self.position
+    element["surface_index"] = self.surface_index
+    element["zoom"] = self.zoom
+
+    element["elements"] = {}
+    for i = 1, #self do
+        table.insert(element["elements"], self[i])
+    end
+
+    if extended_table.is_empty(element.advanced_properties) then element.advanced_properties = nil end
+    if extended_table.is_empty(element.actions) then element.actions = nil end
+
+    return element
+end
+
 
 function BASE_PARAMETERS(self, name, caption, tooltip, enabled, visible, ignored_by_interaction, tags, index, anchor,
                         game_controller_interaction, raise_hover_events, style)
@@ -716,5 +783,9 @@ script.on_event(defines.events.on_gui_text_changed, handle_events)
 script.on_event(defines.events.on_gui_selection_state_changed, handle_events)
 script.on_event(defines.events.on_gui_elem_changed, handle_events)
 script.on_event(defines.events.on_gui_click, handle_events)
+script.on_configuration_changed(function()
+    global.handlers = {}
+end)
+
 
 return gui_builder
