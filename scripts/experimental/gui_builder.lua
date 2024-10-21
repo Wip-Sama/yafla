@@ -27,8 +27,8 @@ function deepcopy(object)
 end
 
 -- id of the element, function,
-if not global.handlers then
-    global.handlers = {}
+if not storage.handlers then
+    storage.handlers = {}
 end
 
 Gui_handlers = Gui_handlers or {}
@@ -51,12 +51,15 @@ local function add_advanced_properties(parent, parameters)
 end
 
 local function handle_events(event)
-    if not global.handlers then
-        global.handlers = {}
+    if not storage.handlers then
+        storage.handlers = {}
     end
-    if global.handlers[event.element.index] then
-        for k, v in pairs(global.handlers[event.element.index]) do
-            if k == event.name then
+    if not storage.handlers[event.player_index] then
+        storage.handlers[event.player_index] = {}
+    end
+    if storage.handlers[event.player_index][event.element.index] then
+        for k, v in pairs(storage.handlers[event.player_index][event.element.index]) do
+            if k == event.name and v then
                 Gui_handlers[script.mod_name][v](event)
             end
         end
@@ -77,12 +80,15 @@ local actions_conversions = {
     on_gui_text_changed = defines.events.on_gui_text_changed,
 }
 
-local function add_actions(element, actions)
-    if not global.handlers then
-        global.handlers = {}
+local function add_actions(element, actions, player_index)
+    if not storage.handlers then
+        storage.handlers = {}
     end
-    if not global.handlers[element.index] then
-        global.handlers[element.index] = {}
+    if not storage.handlers[player_index] then
+        storage.handlers[player_index] = {}
+    end
+    if not storage.handlers[player_index][element.index] then
+        storage.handlers[player_index][element.index] = {}
     else
         error("Element with index " .. element.index .. " already has handlers")
     end
@@ -91,8 +97,8 @@ local function add_actions(element, actions)
         error("Actions must be a table")
     else
         for k, v in pairs(actions) do
-            global.handlers[element.index][actions_conversions[k]] = global.handlers[element.index][actions_conversions[k]] or {}
-            table.insert(global.handlers[element.index], actions_conversions[k], v)
+            storage.handlers[player_index][element.index][actions_conversions[k]] = storage.handlers[player_index][element.index][actions_conversions[k]] or {}
+            table.insert(storage.handlers[player_index][element.index], actions_conversions[k], v)
         end
     end
 end
@@ -107,10 +113,10 @@ function gui_builder.register_handler(name, func)
     Gui_handlers[script.mod_name][name] = func
 end
 
-function gui_builder.build(parent, elements)
+function gui_builder.build(parent, elements, player_index)
     if #elements > 0 then
         for _, v in pairs(elements) do
-            gui_builder.build(parent, v)
+            gui_builder.build(parent, v, player_index)
         end
         return
     end
@@ -140,12 +146,12 @@ function gui_builder.build(parent, elements)
         add_advanced_properties(element, advanced_properties)
     end
     if actions then
-        add_actions(element, actions)
+        add_actions(element, actions, player_index)
     end
 
     if childrens then
         for _, v in pairs(childrens) do
-            gui_builder.build(element, v)
+            gui_builder.build(element, v, player_index)
         end
     end
 
@@ -790,7 +796,7 @@ script.on_event(defines.events.on_gui_selection_state_changed, handle_events)
 script.on_event(defines.events.on_gui_elem_changed, handle_events)
 script.on_event(defines.events.on_gui_click, handle_events)
 script.on_configuration_changed(function()
-    global.handlers = {}
+    storage.handlers = {}
 end)
 
 
