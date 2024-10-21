@@ -51,6 +51,9 @@ local function add_advanced_properties(parent, parameters)
 end
 
 local function handle_events(event)
+    if not global.handlers then
+        global.handlers = {}
+    end
     if global.handlers[event.element.index] then
         for k, v in pairs(global.handlers[event.element.index]) do
             if k == event.name then
@@ -75,6 +78,9 @@ local actions_conversions = {
 }
 
 local function add_actions(element, actions)
+    if not global.handlers then
+        global.handlers = {}
+    end
     if not global.handlers[element.index] then
         global.handlers[element.index] = {}
     else
