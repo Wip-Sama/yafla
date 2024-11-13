@@ -88,9 +88,14 @@ local function add_actions(element, actions, player_index)
         storage.handlers[player_index] = {}
     end
     if not storage.handlers[player_index][element.index] then
+        print("success "..element.index)
         storage.handlers[player_index][element.index] = {}
     else
-        error("Element with index " .. element.index .. " already has handlers")
+        print("failed "..element.name)
+        print("failed "..element.index)
+        game.print("[YAFLA] " .. script.mod_name .. " changed element for player " .. player_index .. " with index " .. element.index .. " that has handlers, if this happens a lot contact the mod author:"..script.mod_name)
+        return
+        --error("Element for player " .. player_index .. " with index " .. element.index .. " already has handlers")
     end
 
     if type(actions) ~= "table" then
@@ -156,6 +161,27 @@ function gui_builder.build(parent, elements, player_index)
     end
 
     return element
+end
+
+---@param gui LuaGuiElement
+local function recursively_clear_handlers( gui )
+    if #gui.children > 0 then
+        for _, v in pairs(gui.children) do
+            recursively_clear_handlers(v)
+        end
+    end
+    if storage.handlers[gui.player_index] and storage.handlers[gui.player_index][gui.index] then
+        storage.handlers[gui.player_index][gui.index] = nil
+    end
+end
+
+---@param gui LuaGuiElement
+function gui_builder.delete(gui)
+    local pid = gui.player_index
+    if storage.handlers[pid] then
+        recursively_clear_handlers(gui)
+    end
+    gui.destroy()
 end
 
 -- Components
