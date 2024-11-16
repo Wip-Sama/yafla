@@ -57,8 +57,11 @@ local function handle_events(event)
     if not storage.handlers[event.player_index] then
         storage.handlers[event.player_index] = {}
     end
-    if storage.handlers[event.player_index][event.element.index] then
-        for k, v in pairs(storage.handlers[event.player_index][event.element.index]) do
+    if not storage.handlers[event.player_index][script.mod_name] then
+        storage.handlers[event.player_index][script.mod_name] = {}
+    end
+    if storage.handlers[event.player_index][script.mod_name][event.element.index] then
+        for k, v in pairs(storage.handlers[event.player_index][script.mod_name][event.element.index]) do
             if k == event.name and v then
                 Gui_handlers[script.mod_name][v](event)
             end
@@ -87,9 +90,12 @@ local function add_actions(element, actions, player_index)
     if not storage.handlers[player_index] then
         storage.handlers[player_index] = {}
     end
-    if not storage.handlers[player_index][element.index] then
+    if not storage.handlers[player_index][script.mod_name] then
+        storage.handlers[player_index][script.mod_name] = {}
+    end
+    if not storage.handlers[player_index][script.mod_name][element.index] then
         print("success "..element.index)
-        storage.handlers[player_index][element.index] = {}
+        storage.handlers[player_index][script.mod_name][element.index] = {}
     else
         print("failed "..element.name)
         print("failed "..element.index)
@@ -102,8 +108,8 @@ local function add_actions(element, actions, player_index)
         error("Actions must be a table")
     else
         for k, v in pairs(actions) do
-            storage.handlers[player_index][element.index][actions_conversions[k]] = storage.handlers[player_index][element.index][actions_conversions[k]] or {}
-            table.insert(storage.handlers[player_index][element.index], actions_conversions[k], v)
+            storage.handlers[player_index][script.mod_name][element.index][actions_conversions[k]] = storage.handlers[player_index][script.mod_name][element.index][actions_conversions[k]] or {}
+            table.insert(storage.handlers[player_index][script.mod_name][element.index], actions_conversions[k], v)
         end
     end
 end
