@@ -1,5 +1,6 @@
 local extended_table = require("__yafla__.scripts.extended_table")
 local gui_builder = {}
+local flags = require("flags")
 local util = require("util")
 
 function deepcopy(object)
@@ -94,11 +95,16 @@ local function add_actions(element, actions, player_index)
         storage.handlers[player_index][script.mod_name] = {}
     end
     if not storage.handlers[player_index][script.mod_name][element.index] then
-        print("success "..element.index)
+        if flags.is_debug then
+            print("success "..element.name)
+            print("success "..element.index)
+        end
         storage.handlers[player_index][script.mod_name][element.index] = {}
     else
-        print("failed "..element.name)
-        print("failed "..element.index)
+        if flags.is_debug then
+            print("failed "..element.name)
+            print("failed "..element.index)
+        end
         game.print("[YAFLA] " .. script.mod_name .. " changed element for player " .. player_index .. " with index " .. element.index .. " that has handlers, if this happens a lot contact the mod author:"..script.mod_name)
         return
         --error("Element for player " .. player_index .. " with index " .. element.index .. " already has handlers")
