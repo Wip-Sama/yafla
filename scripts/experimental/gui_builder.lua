@@ -837,5 +837,4 @@ script.on_configuration_changed(function()
     storage.handlers = {}
 end)
 
-
 return gui_builder

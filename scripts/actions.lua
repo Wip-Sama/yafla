@@ -9,7 +9,7 @@ Actions_to_be_executed = Actions_to_be_executed or {}
 --[[
     {
         next_execution (tick the action should be executed)
-        interval (interval between executions)
+        interval (interval between executions expressed in updates (ticks))
         action (function to be executed)
         data (data/parameters to be passed to the function)
     }
@@ -20,9 +20,9 @@ local actions = {}
 
 --[[   
     WARNING: the parameters will be passed as a table so imagine your function in this way:
-    fucntion(self)
+    `fucntion(self)
         print(self.something)
-    end
+    end`
 --]]
 ---@param delay number How many ticks to wait before executing the action
 ---@param action function The function to be executed
@@ -39,16 +39,15 @@ function actions.delay_action(delay, action, custom_data)
 end
 
 --[[   
-    WARNING: the parameters will be passed as a table so imagine your function in this way:
-    fucntion(self)
+    WARNING: the parameters will be passed as a **table** so imagine your function in this way:
+    '' fucntion(self)
         print(self.something)
-    end
+    end ''
 --]]
 ---@param interval number How many ticks to wait before executing the action
 ---@param action function The function to be executed
 ---@param last_execution_tick number|nil The tick the action was last executed
 ---@param custom_data any|nil The data to be passed to the function
----@param extra_data any|nil Data that you may need, it won't be passed to the function
 ---@return string action_id
 function actions.loop_action(interval, action, last_execution_tick, custom_data)
     local action_id = tostring(game.tick).."_"..tostring(#Actions_to_be_looped)
@@ -63,7 +62,7 @@ function actions.loop_action(interval, action, last_execution_tick, custom_data)
     return action_id
 end
 
----@param action_id string The id of the action to be stopped
+---@param action_id string The id of the action to be retrived
 ---@return table|nil
 function actions.get_loop_action(action_id)
     if Actions_to_be_looped[action_id] then

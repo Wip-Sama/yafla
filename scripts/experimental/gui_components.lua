@@ -123,8 +123,13 @@ function Hotbar(parent, pinnable, close_button, extra_button, icon, title)
 end
 
 function Window(player, extra_parameters)
-    local element = {
-        type = "frame",
+    -- local element = {
+    --     type = "frame",
+    --     direction = "vertical",
+    --     ref = { "window" },
+    -- }
+
+    local element = FRAME {
         direction = "vertical",
         ref = { "window" },
     }
@@ -155,7 +160,8 @@ function Window(player, extra_parameters)
 
     gui_builder.build(
         window,
-        Hotbar(window, extra_parameters.pinnable, extra_parameters.closable, extra_parameters.extra_button, extra_parameters.window_icon, extra_parameters.window_title)
+        Hotbar(window, extra_parameters.pinnable, extra_parameters.closable, extra_parameters.extra_button, extra_parameters.window_icon, extra_parameters.window_title),
+        player.index
     )
 
     return window
