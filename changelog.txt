@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.1.13
+Date: 2024-12-09
+  Changes:
+    - Window close button now destroys instead of hiding the gui
+  Bugfixes:
+    - Windows close button was missing a sprite
+  Added:
+    - PANE gui component
+---------------------------------------------------------------------------------------------------
 Version: 0.1.12
 Date: 2024-12-03
   Bugfixes:

@@ -1,14 +1,15 @@
 local gui_builder = require("gui_builder")
 
 local destroy_element = function(event)
-    event.element.parent.parent.visible = false
+    event.element.parent.parent.destroy()
+    -- event.element.parent.parent.visible = false
 end
 
 gui_builder.register_handler("close", destroy_element)
 
 function Close_button(extra_parameters)
     local element = {
-        sprite = "utility/close_white",
+        sprite = "utility/close",
         hovered_sprite = "utility/close_black",
         clicked_sprite = "utility/close_black",
         tooltip = "Close the window",
@@ -24,7 +25,7 @@ end
 
 function Pin_button(extra_parameters)
     local element = {
-        sprite = "utility/close_white",
+        sprite = "utility/close",
         hovered_sprite = "utility/close_black",
         clicked_sprite = "utility/close_black",
         tooltip = "Close the window",

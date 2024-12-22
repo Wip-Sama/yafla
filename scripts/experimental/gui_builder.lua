@@ -96,16 +96,21 @@ local function add_actions(element, actions, player_index)
     end
     if not storage.handlers[player_index][script.mod_name][element.index] then
         if flags.is_debug then
-            print("success "..element.name)
-            print("success "..element.index)
+            print("success " .. element.name)
+            print("success " .. element.index)
         end
         storage.handlers[player_index][script.mod_name][element.index] = {}
     else
         if flags.is_debug then
-            print("failed "..element.name)
-            print("failed "..element.index)
+            print("failed " .. element.name)
+            print("failed " .. element.index)
         end
-        game.print("[YAFLA] " .. script.mod_name .. " changed element for player " .. player_index .. " with index " .. element.index .. " that has handlers, if this happens a lot contact the mod author:"..script.mod_name)
+        game.print("[YAFLA] " ..
+        script.mod_name ..
+        " changed element for player " ..
+        player_index ..
+        " with index " ..
+        element.index .. " that has handlers, if this happens a lot contact the mod author:" .. script.mod_name)
         return
         --error("Element for player " .. player_index .. " with index " .. element.index .. " already has handlers")
     end
@@ -114,7 +119,8 @@ local function add_actions(element, actions, player_index)
         error("Actions must be a table")
     else
         for k, v in pairs(actions) do
-            storage.handlers[player_index][script.mod_name][element.index][actions_conversions[k]] = storage.handlers[player_index][script.mod_name][element.index][actions_conversions[k]] or {}
+            storage.handlers[player_index][script.mod_name][element.index][actions_conversions[k]] = storage.handlers
+            [player_index][script.mod_name][element.index][actions_conversions[k]] or {}
             table.insert(storage.handlers[player_index][script.mod_name][element.index], actions_conversions[k], v)
         end
     end
@@ -176,7 +182,7 @@ function gui_builder.build(parent, elements, player_index)
 end
 
 ---@param gui LuaGuiElement
-local function recursively_clear_handlers( gui )
+local function recursively_clear_handlers(gui)
     if #gui.children > 0 then
         for _, v in pairs(gui.children) do
             recursively_clear_handlers(v)
@@ -411,6 +417,23 @@ function SCROLL_PANE(self, items, base_parameters, style_parameters)
 
     element["horizontal_scroll_policy"] = self.horizontal_scroll_policy
     element["vertical_scroll_policy"] = self.vertical_scroll_policy
+
+    element["elements"] = {}
+    for i = 1, #self do
+        table.insert(element["elements"], self[i])
+    end
+
+    if extended_table.is_empty(element.advanced_properties) then element.advanced_properties = nil end
+    if extended_table.is_empty(element.actions) then element.actions = nil end
+
+    return element
+end
+
+---https://lua-api.factorio.com/latest/classes/LuaGuiElement.html#scroll-pane
+function PANE(self, items, base_parameters, style_parameters)
+    local element = { type = "pane", advanced_properties = {}, actions = {} }
+
+    inplement_parameters(element, self)
 
     element["elements"] = {}
     for i = 1, #self do
@@ -722,9 +745,8 @@ function CAMERA(self, position, surface_index, zoom)
     return element
 end
 
-
 function BASE_PARAMETERS(self, name, caption, tooltip, enabled, visible, ignored_by_interaction, tags, index, anchor,
-                        game_controller_interaction, raise_hover_events, style)
+                         game_controller_interaction, raise_hover_events, style)
     return {
         name = self.name,
         caption = self.caption,
@@ -827,7 +849,6 @@ function STYLE_PARAMETERS(self, minimal_width, maximal_width, minimal_height, ma
         extra_margin_when_activated = self.extra_margin_when_activated,
     }
 end
-
 
 script.on_event(defines.events.on_gui_text_changed, handle_events)
 script.on_event(defines.events.on_gui_selection_state_changed, handle_events)
