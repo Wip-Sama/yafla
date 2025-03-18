@@ -94,7 +94,7 @@ local function add_actions(element, actions, player_index)
     if not storage.handlers[player_index][script.mod_name] then
         storage.handlers[player_index][script.mod_name] = {}
     end
-    if not storage.handlers[player_index][script.mod_name][element.index] then
+    if (not storage.handlers[player_index][script.mod_name][element.index]) or storage.handlers[player_index][script.mod_name][element.index] ~= nil then
         if flags.is_debug then
             print("success " .. element.name)
             print("success " .. element.index)
@@ -188,15 +188,15 @@ local function recursively_clear_handlers(gui)
             recursively_clear_handlers(v)
         end
     end
-    if storage.handlers[gui.player_index] and storage.handlers[gui.player_index][gui.index] then
-        storage.handlers[gui.player_index][gui.index] = nil
+    if storage.handlers[gui.player_index] and storage.handlers[gui.player_index][gui.get_mod()] and storage.handlers[gui.player_index][script.mod_name][gui.index] then
+        --table.remove(storage.handlers[gui.player_index][gui.get_mod()], gui.index)
+        storage.handlers[gui.player_index][script.mod_name][gui.index] = nil
     end
 end
 
 ---@param gui LuaGuiElement
 function gui_builder.delete(gui)
-    local pid = gui.player_index
-    if storage.handlers[pid] then
+    if storage.handlers[gui.player_index] and storage.handlers[gui.player_index][script.mod_name] then
         recursively_clear_handlers(gui)
     end
     gui.destroy()
@@ -854,6 +854,7 @@ script.on_event(defines.events.on_gui_text_changed, handle_events)
 script.on_event(defines.events.on_gui_selection_state_changed, handle_events)
 script.on_event(defines.events.on_gui_elem_changed, handle_events)
 script.on_event(defines.events.on_gui_click, handle_events)
+script.on_event(defines.events.on_gui_closed)
 script.on_configuration_changed(function()
     storage.handlers = {}
 end)
