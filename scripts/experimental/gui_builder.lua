@@ -854,7 +854,6 @@ script.on_event(defines.events.on_gui_text_changed, handle_events)
 script.on_event(defines.events.on_gui_selection_state_changed, handle_events)
 script.on_event(defines.events.on_gui_elem_changed, handle_events)
 script.on_event(defines.events.on_gui_click, handle_events)
-script.on_event(defines.events.on_gui_closed)
 script.on_configuration_changed(function()
     storage.handlers = {}
 end)
