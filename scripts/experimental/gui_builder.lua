@@ -58,13 +58,13 @@ local function handle_events(event)
     if not storage.handlers[event.player_index] then
         storage.handlers[event.player_index] = {}
     end
-    if not storage.handlers[event.player_index][script.mod_name] then
-        storage.handlers[event.player_index][script.mod_name] = {}
+    if not storage.handlers[event.player_index][event.element.get_mod()] then
+        storage.handlers[event.player_index][event.element.get_mod()] = {}
     end
-    if storage.handlers[event.player_index][script.mod_name][event.element.index] then
-        for k, v in pairs(storage.handlers[event.player_index][script.mod_name][event.element.index]) do
+    if storage.handlers[event.player_index][event.element.get_mod()][event.element.index] then
+        for k, v in pairs(storage.handlers[event.player_index][event.element.get_mod()][event.element.index]) do
             if k == event.name and v then
-                Gui_handlers[script.mod_name][v](event)
+                Gui_handlers[event.element.get_mod()][v](event)
             end
         end
     end
@@ -91,26 +91,26 @@ local function add_actions(element, actions, player_index)
     if not storage.handlers[player_index] then
         storage.handlers[player_index] = {}
     end
-    if not storage.handlers[player_index][script.mod_name] then
-        storage.handlers[player_index][script.mod_name] = {}
+    if not storage.handlers[player_index][element.get_mod()] then
+        storage.handlers[player_index][element.get_mod()] = {}
     end
-    if (not storage.handlers[player_index][script.mod_name][element.index]) or storage.handlers[player_index][script.mod_name][element.index] ~= nil then
+    if (not storage.handlers[player_index][element.get_mod()][element.index]) or storage.handlers[player_index][element.get_mod()][element.index] ~= nil then
         if flags.is_debug then
             print("success " .. element.name)
             print("success " .. element.index)
         end
-        storage.handlers[player_index][script.mod_name][element.index] = {}
+        storage.handlers[player_index][element.get_mod()][element.index] = {}
     else
         if flags.is_debug then
             print("failed " .. element.name)
             print("failed " .. element.index)
         end
         game.print("[YAFLA] " ..
-        script.mod_name ..
+        element.get_mod() ..
         " changed element for player " ..
         player_index ..
         " with index " ..
-        element.index .. " that has handlers, if this happens a lot contact the mod author:" .. script.mod_name)
+        element.index .. " that has handlers, if this happens a lot contact the mod author:" .. element.get_mod())
         return
         --error("Element for player " .. player_index .. " with index " .. element.index .. " already has handlers")
     end
@@ -119,9 +119,9 @@ local function add_actions(element, actions, player_index)
         error("Actions must be a table")
     else
         for k, v in pairs(actions) do
-            storage.handlers[player_index][script.mod_name][element.index][actions_conversions[k]] = storage.handlers
-            [player_index][script.mod_name][element.index][actions_conversions[k]] or {}
-            table.insert(storage.handlers[player_index][script.mod_name][element.index], actions_conversions[k], v)
+            storage.handlers[player_index][element.get_mod()][element.index][actions_conversions[k]] = storage.handlers
+            [player_index][element.get_mod()][element.index][actions_conversions[k]] or {}
+            table.insert(storage.handlers[player_index][element.get_mod()][element.index], actions_conversions[k], v)
         end
     end
 end
@@ -188,15 +188,15 @@ local function recursively_clear_handlers(gui)
             recursively_clear_handlers(v)
         end
     end
-    if storage.handlers[gui.player_index] and storage.handlers[gui.player_index][gui.get_mod()] and storage.handlers[gui.player_index][script.mod_name][gui.index] then
+    if storage.handlers[gui.player_index] and storage.handlers[gui.player_index][gui.get_mod()] and storage.handlers[gui.player_index][gui.get_mod()][gui.index] then
         --table.remove(storage.handlers[gui.player_index][gui.get_mod()], gui.index)
-        storage.handlers[gui.player_index][script.mod_name][gui.index] = nil
+        storage.handlers[gui.player_index][gui.get_mod()][gui.index] = nil
     end
 end
 
 ---@param gui LuaGuiElement
 function gui_builder.delete(gui)
-    if storage.handlers[gui.player_index] and storage.handlers[gui.player_index][script.mod_name] then
+    if storage.handlers[gui.player_index] and storage.handlers[gui.player_index][gui.get_mod()] then
         recursively_clear_handlers(gui)
     end
     gui.destroy()
