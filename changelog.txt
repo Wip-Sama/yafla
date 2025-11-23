@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.1.17
+Date: 2025-11-23
+  Bugfixes:
+    - Crash when istantiating a loop_activity while game is still not available
+---------------------------------------------------------------------------------------------------
+Version: 0.1.16
+Date: 2025-05-20
+  Bugfixes:
+    - Crash when entering sandbox mode (more specifically when tyrying to execute events from nil mods)
+---------------------------------------------------------------------------------------------------
 Version: 0.1.15
 Date: 2025-03-19
   Bugfixes:

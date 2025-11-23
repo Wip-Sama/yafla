@@ -50,6 +50,9 @@ end
 ---@param custom_data any|nil The data to be passed to the function
 ---@return string action_id
 function actions.loop_action(interval, action, last_execution_tick, custom_data)
+    if game == nil then
+        game = { tick = 0 }
+    end
     local action_id = tostring(game.tick).."_"..tostring(#Actions_to_be_looped)
 
     Actions_to_be_looped[action_id] = {

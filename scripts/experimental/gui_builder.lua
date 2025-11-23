@@ -58,6 +58,10 @@ local function handle_events(event)
     if not storage.handlers[event.player_index] then
         storage.handlers[event.player_index] = {}
     end
+    if event.element.get_mod() == nil then
+        --not a valid caller
+        return
+    end
     if not storage.handlers[event.player_index][event.element.get_mod()] then
         storage.handlers[event.player_index][event.element.get_mod()] = {}
     end
