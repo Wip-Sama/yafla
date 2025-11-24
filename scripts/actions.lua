@@ -77,9 +77,14 @@ end
 ---@param action_id string The id of the action to be stopped
 ---@return nil
 function actions.stop_loop_action(action_id)
-    if Actions_to_be_looped[action_id] then
+    if action_id ~= nil and Actions_to_be_looped[action_id] then
         Actions_to_be_looped[action_id] = nil
     end
+end
+
+---@return nil
+function actions.stop_all_actions()
+    Actions_to_be_looped = nil
 end
 
 local function execute_delayed_actions(event)

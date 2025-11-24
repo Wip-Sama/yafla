@@ -1,7 +1,9 @@
 local extended_table = require("__yafla__.scripts.extended_table")
-local gui_builder = {}
 local flags = require("flags")
 local util = require("util")
+
+local gui_builder = {}
+
 
 function deepcopy(object)
     local lookup_table = {}
