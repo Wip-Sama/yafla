@@ -1,7 +1,7 @@
 local extended_table = {}
 
+---@deprecated
 function extended_table.deepcopy()
-    
 end
 
 function extended_table.is_empty(tbl)

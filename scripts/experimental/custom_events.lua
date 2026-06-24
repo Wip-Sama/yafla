@@ -38,7 +38,7 @@ script.on_event(event_groups.on_created_entity, function(event)
 end)
 
 script.on_event(event_groups.on_removed_entity, function(event)
-    if event.entity then
+    if event.entity and event.entity.valid then
         --script.raise_event(defines.events.yafla_on_pre_removed_entity, event)
         script.raise_event(defines.events.yafla_on_removed_entity, event)
     end
@@ -59,7 +59,7 @@ local function player_has_circuit_wire_in_hand(player)
     return false
 end
 
-local function entity_is_circuit_network_entity(entity)
+local function entity_has_circuit_attached(entity)
     if not (entity and entity.valid) then return false end
     if entity.get_circuit_network(defines.wire_type.red) ~= nil then
         return true
@@ -72,8 +72,7 @@ end
 
 script.on_event(defines.events.yafla_on_created_entity, function(event)
     if not (event.entity and event.entity.valid) then return end
-
-    if not entity_is_circuit_network_entity(event.entity) then
+    if not entity_has_circuit_attached(event.entity) then
         return
     end
 
@@ -81,26 +80,29 @@ script.on_event(defines.events.yafla_on_created_entity, function(event)
 end)
 
 script.on_event(defines.events.yafla_on_removed_entity, function(event)
+    if not (event.entity and event.entity.valid) then return end
+    if not entity_has_circuit_attached(event.entity) then
+        return
+    end
 
-
-
-    --script.raise_event(defines.events.yafla_on_circuit_network_changed, event)
+    --TODO: Something to chek if we need to raise yafla_on_circuit_network_changed
+    script.raise_event(defines.events.yafla_on_circuit_network_changed, event)
 end)
 
+--The 2 below could be used instead of looping for every tick to check if stuff chanegd in the circuit network, but this will not work for circuit values
 script.on_event(defines.events.on_player_cursor_stack_changed, function(event)
     if not (event.player_index) then return end
     local player = game.get_player(event.player_index)
     if player == nil then return end
     if player.is_cursor_empty() then return end
-    if not player_has_circuit_wire_in_hand(player) or not player.selected then return end
 
-    --???
-
+    --TODO: Something to chek if we need to raise yafla_on_circuit_network_changed
+    --if not player_has_circuit_wire_in_hand(player) or not player.selected then return end
     --script.raise_event(defines.events.yafla_on_circuit_network_changed, event)
 end)
 
 script.on_event(defines.events.on_selected_entity_changed, function(event)
 
-
+    --TODO: Something to chek if we need to raise yafla_on_circuit_network_changed
     --script.raise_event(defines.events.yafla_on_circuit_network_changed, event)
 end)
