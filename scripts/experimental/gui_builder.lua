@@ -151,9 +151,14 @@ function gui_builder.build(parent, elements, player_index)
     local childrens
     local actions
     local advanced_properties
+    local tabs
     if elements.elements then
         childrens = elements.elements
         elements.elements = nil
+    end
+    if elements.tabs then
+        tabs = elements.tabs
+        elements.tabs = nil
     end
     if elements.actions then
         actions = elements.actions
@@ -179,6 +184,14 @@ function gui_builder.build(parent, elements, player_index)
     if childrens then
         for _, v in pairs(childrens) do
             gui_builder.build(element, v, player_index)
+        end
+    end
+    
+    if tabs then
+        for _, tab_pair in ipairs(tabs) do
+            local tab = gui_builder.build(element, tab_pair.tab, player_index)
+            local content = gui_builder.build(element, tab_pair.content, player_index)
+            element.add_tab(tab, content)
         end
     end
 
@@ -443,6 +456,36 @@ function PANE(self, items, base_parameters, style_parameters)
     for i = 1, #self do
         table.insert(element["elements"], self[i])
     end
+
+    if extended_table.is_empty(element.advanced_properties) then element.advanced_properties = nil end
+    if extended_table.is_empty(element.actions) then element.actions = nil end
+
+    return element
+end
+
+---https://lua-api.factorio.com/latest/classes/LuaGuiElement.html#tabbed-pane
+function TABBED_PANE(self)
+    local element = { type = "tabbed-pane", advanced_properties = {}, actions = {} }
+
+    inplement_parameters(element, self)
+
+    element["tabs"] = {}
+    for i = 1, #self do
+        table.insert(element["tabs"], self[i])
+    end
+
+    if extended_table.is_empty(element.advanced_properties) then element.advanced_properties = nil end
+    if extended_table.is_empty(element.actions) then element.actions = nil end
+
+    return element
+end
+
+---https://lua-api.factorio.com/latest/classes/LuaGuiElement.html#tab
+function TAB(self)
+    local element = { type = "tab", advanced_properties = {}, actions = {} }
+
+    inplement_parameters(element, self)
+    element["badge_text"] = self.badge_text
 
     if extended_table.is_empty(element.advanced_properties) then element.advanced_properties = nil end
     if extended_table.is_empty(element.actions) then element.actions = nil end
