@@ -711,6 +711,7 @@ function TEXTFIELD(self, items, selected_index)
     element["is_password"] = self.is_password
     element["lose_focus_on_confirm"] = self.lose_focus_on_confirm
     element["clear_and_focus_on_right_click"] = self.clear_and_focus_on_right_click
+    element["icon_selector"] = self.icon_selector
 
     element["actions"]["on_text_changed"] = self.on_text_changed
 
