@@ -49,11 +49,13 @@ function math2d.position.tilepos(pos)
 end
 
 function math2d.position.adds(args)
-    local p1 = {x = 0, y = 0}
+    local x, y = 0, 0
     for _, value in pairs(args) do
-        p1 = math2d.position.add(p1, value)
+        local v = math2d.position.ensure_xy(value)
+        x = x + v.x
+        y = y + v.y
     end
-    return p1
+    return {x = x, y = y}
 end
 
 math2d.direction = {}
