@@ -16,14 +16,13 @@ local event_groups = {
     }
 }
 
-defines.events = {
-    -- Entities ignore biters stuff for now
-    --yafla_on_pre_created_entity = {}, --TODO
-    yafla_on_created_entity = {},
-    --yafla_on_pre_removed_entity = {}, --TODO
-    yafla_on_removed_entity = {},
-    --yafla_on_pre_circuit_network_changed = {}, --TODO
-    yafla_on_circuit_network_changed = {}
+local exported_events = {
+    --yafla_on_pre_created_entity = {},
+    yafla_on_created_entity = script.generate_event_name(),
+    --yafla_on_pre_removed_entity = {},
+    yafla_on_removed_entity = script.generate_event_name(),
+    --yafla_on_pre_circuit_network_changed = {}, 
+    yafla_on_circuit_network_changed = script.generate_event_name()
 }
 
 
@@ -33,14 +32,14 @@ defines.events = {
 script.on_event(event_groups.on_created_entity, function(event)
     if event.entity and event.entity.valid then
         --script.raise_event(defines.events.yafla_on_pre_created_entity, event)
-        script.raise_event(defines.events.yafla_on_created_entity, event)
+        script.raise_event(exported_events.yafla_on_created_entity, event)
     end
 end)
 
 script.on_event(event_groups.on_removed_entity, function(event)
     if event.entity and event.entity.valid then
         --script.raise_event(defines.events.yafla_on_pre_removed_entity, event)
-        script.raise_event(defines.events.yafla_on_removed_entity, event)
+        script.raise_event(exported_events.yafla_on_removed_entity, event)
     end
 end)
 
@@ -70,23 +69,23 @@ local function entity_has_circuit_attached(entity)
     return false
 end
 
-script.on_event(defines.events.yafla_on_created_entity, function(event)
+script.on_event(exported_events.yafla_on_created_entity, function(event)
     if not (event.entity and event.entity.valid) then return end
     if not entity_has_circuit_attached(event.entity) then
         return
     end
 
-    script.raise_event(defines.events.yafla_on_circuit_network_changed, event)
+    script.raise_event(exported_events.yafla_on_circuit_network_changed, event)
 end)
 
-script.on_event(defines.events.yafla_on_removed_entity, function(event)
+script.on_event(exported_events.yafla_on_removed_entity, function(event)
     if not (event.entity and event.entity.valid) then return end
     if not entity_has_circuit_attached(event.entity) then
         return
     end
 
     --TODO: Something to chek if we need to raise yafla_on_circuit_network_changed
-    script.raise_event(defines.events.yafla_on_circuit_network_changed, event)
+    script.raise_event(exported_events.yafla_on_circuit_network_changed, event)
 end)
 
 --The 2 below could be used instead of looping for every tick to check if stuff chanegd in the circuit network, but this will not work for circuit values
@@ -98,11 +97,13 @@ script.on_event(defines.events.on_player_cursor_stack_changed, function(event)
 
     --TODO: Something to chek if we need to raise yafla_on_circuit_network_changed
     --if not player_has_circuit_wire_in_hand(player) or not player.selected then return end
-    --script.raise_event(defines.events.yafla_on_circuit_network_changed, event)
+    --script.raise_event(exported_events.yafla_on_circuit_network_changed, event)
 end)
 
 script.on_event(defines.events.on_selected_entity_changed, function(event)
 
     --TODO: Something to chek if we need to raise yafla_on_circuit_network_changed
-    --script.raise_event(defines.events.yafla_on_circuit_network_changed, event)
+    --script.raise_event(exported_events.yafla_on_circuit_network_changed, event)
 end)
+
+return exported_events

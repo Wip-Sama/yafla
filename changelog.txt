@@ -1,6 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.2.1
+Date: 2026-07-12
+  Fixed:
+    - Crash for some unused events declarations
+---------------------------------------------------------------------------------------------------
 Version: 0.2.0
-Date: ????
+Date: 2026-07-08
   Changes:
     - extended_table: is_empty, deepcopy reworked
     - math2d.position.adds was rewritten to avoid dynamic table allocations in math loops
