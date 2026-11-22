@@ -60,10 +60,10 @@ end
 
 local function entity_has_circuit_attached(entity)
     if not (entity and entity.valid) then return false end
-    if entity.get_circuit_network(defines.wire_type.red) ~= nil then
+    if entity.get_circuit_network(defines.wire_connector_id.circuit_red) ~= nil then
         return true
     end
-    if entity.get_circuit_network(defines.wire_type.green) ~= nil then
+    if entity.get_circuit_network(defines.wire_connector_id.circuit_green) ~= nil then
         return true
     end
     return false
@@ -85,6 +85,7 @@ script.on_event(exported_events.yafla_on_removed_entity, function(event)
     end
 
     --TODO: Something to chek if we need to raise yafla_on_circuit_network_changed
+    event.yafla_removed = true
     script.raise_event(exported_events.yafla_on_circuit_network_changed, event)
 end)
 

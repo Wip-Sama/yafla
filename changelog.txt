@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.2.2
+Date: 22/11/2026
+  Bugfixes:
+    - Fixed Factorio 2.0/2.1 crash in custom_events.lua using removed defines.wire_type instead of defines.wire_connector_id
+    - Fixed stop_all_actions setting Actions_to_be_looped to nil and prevented loop_action ID collisions and global game mutation
+    - Hardened gui_builder event handling, action registration, and handler cleanup against invalid elements or nil mod names
+---------------------------------------------------------------------------------------------------
 Version: 0.2.1
 Date: 2026-07-12
   Fixed:

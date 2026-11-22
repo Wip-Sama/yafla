@@ -44,19 +44,20 @@ end
         print(self.something)
     end ''
 --]]
+local next_action_id = 0
+
 ---@param interval number How many ticks to wait before executing the action
 ---@param action function The function to be executed
 ---@param last_execution_tick number|nil The tick the action was last executed
 ---@param custom_data any|nil The data to be passed to the function
 ---@return string action_id
 function actions.loop_action(interval, action, last_execution_tick, custom_data)
-    if game == nil then
-        game = { tick = 0 }
-    end
-    local action_id = tostring(game.tick).."_"..tostring(#Actions_to_be_looped)
+    local current_tick = game and game.tick or 0
+    next_action_id = next_action_id + 1
+    local action_id = tostring(current_tick) .. "_" .. tostring(next_action_id)
 
     Actions_to_be_looped[action_id] = {
-        next_execution = game.tick + interval,
+        next_execution = current_tick + interval,
         last_execution_tick = last_execution_tick or -1,
         interval = interval,
         action = action,
@@ -84,7 +85,7 @@ end
 
 ---@return nil
 function actions.stop_all_actions()
-    Actions_to_be_looped = nil
+    Actions_to_be_looped = {}
 end
 
 local function execute_delayed_actions(event)
