@@ -1,11 +1,15 @@
-# Ignore version control
+# Ignore version control and editor config
 .git
 .gitignore
+.gitattributes
+.vscode/
 
-# Ignore build script itself
+# Ignore build script and scratch scripts
 package_mod.py
+tets.lua
 
 # Ignore other files
+*.zip
 *.kra
 *.psd
 *.xlsx
